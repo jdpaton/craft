@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+import os
+
+try:
+  with open(os.environ.get('CRAFTFILE', os.path.join(os.getcwd(), 'crafty.py'))) as f:
+      exec(f.read()+'\nfrom craft.crafty import run\nrun()')
+except IOError as e:
+  print('ERR: crafty.py file not found')
+
