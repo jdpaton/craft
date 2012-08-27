@@ -1,0 +1,73 @@
+Craft - idiomatic build tool for Python
+=======================================
+
+Craft is like Makefile, except everything is in native Python. 
+
+Install
+-------
+
+``pip install craft``
+
+Craft works on Python 2.7+ and Python 3.2+.
+
+Crafty files
+------------
+
+Craft will read attempt to read ``crafty.py`` in the current directory
+or the environment variable ``$CRAFTFILE``.
+
+An example ``crafty.py``::
+
+    from craft import task
+
+    @task
+    def cake():
+      """ Prints cake """
+      print('cake time')
+
+    @task
+    def bar():
+      """ Prints bar """
+      print('bar')
+
+    @task
+    def foo():
+      print("Hi, I'm foo")
+
+Usage
+-----
+
+Running ``craft -h`` in the directory containing ``crafty.py`` will
+show the list of available tasks. Example::
+
+    usage: craft [-h] [task [task ...]]
+
+    positional arguments:
+      task
+
+    optional arguments:
+      -h, --help  show this help message and exit
+
+    Available tasks:
+
+    - cake: Prints cake 
+    - bar: Prints bar 
+    - foo: 
+
+As you can see, the docstring for each ``@task`` function will then be represented
+in the help output, and docstrings can be omitted.
+
+
+You can call induvidual tasks like:
+
+``craft foo``
+
+and run multiple tasks with one call like:
+
+``craft foo bar``
+
+Inter-task dependencies are coming soon.
+
+Source is available at: https://github.com/jdpaton/craft
+
+

@@ -10,10 +10,8 @@ setup(
     url='http://pypi.python.org/pypi/craft/',
     license='LICENSE.txt',
     description='Craft - Like Makefile, but in Python.',
-    long_description=open('README').read(),
+    long_description=open('README.pypi').read(),
     install_requires=[
-        "paramiko >= 1.7.7.2",
-        "pbs > 0.1",
         "termcolor == 1.1.0",
     ],
 )
