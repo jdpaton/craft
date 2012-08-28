@@ -1,1 +1,1 @@
-from craft.crafty import task
+from craft.crafty import task, depends

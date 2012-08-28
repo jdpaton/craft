@@ -5,6 +5,11 @@ import inspect
 
 from termcolor import cprint, colored
 
+
+print_err = colored("ERR", 'red')
+print_warn = colored("WARN", 'yellow')
+print_ok = colored("OK", 'green')
+
 def run():
   """Entry point"""
   task_list = ("\n".join(['- ' + t + ': ' + (inspect.getdoc(task.all[t]) or "") for t in task.all]))
@@ -16,10 +21,20 @@ def run():
     for t in args.task:
       tprint = colored(t, 'blue')
       if t in task.all:
-        print("Running task: [ {} ]".format(tprint))
+        print("Running task: -> [ {} ]".format(tprint))
+        if t in dependsRegister:
+          for d in dependsRegister[t][1]:
+            if d in task.all:
+              print("Running task dependency: -> [ {} ]\n".format(colored(d, 'blue')))
+              task.all[d]()
+              print("."*5 + print_ok)
+            else:
+              print(print_warn + " Task [ {} ] not found, skipping".format(colored(d, 'blue')))
+
         task.all[t]()
+        print("\n" + print_ok + " task \"{}\" successfully completed".format(t))
+
       else:
-        err = colored("ERR", 'red')
         print("{} Could not find task [ {} ] in the craftfile.".format(err, tprint))
 
 def execfile():
@@ -38,7 +53,20 @@ def TaskRegistrar():
     registrar.all = registry
     return registrar
 
+dependsRegister = {}
+
+def dependsRegistrar(*dargs, **dkwargs):
+    """ dependency register in global dict.
+       If called as a function directly, we don't get
+       the function name, just the decorator arguments.
+    """
+    def wrap(f):
+        dependsRegister[f.__name__] = [f, dargs]
+        return f
+    return wrap
+
 task = TaskRegistrar()
+depends = dependsRegistrar
 
 
 
