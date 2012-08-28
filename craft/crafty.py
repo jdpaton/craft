@@ -6,9 +6,9 @@ import inspect
 from termcolor import cprint, colored
 
 
-print_err = colored("ERR", 'red')
-print_warn = colored("WARN", 'yellow')
-print_ok = colored("OK", 'green')
+print_err = colored("[ERR]", 'red')
+print_warn = colored("[WARN]", 'yellow')
+print_ok = colored("[OK]", 'green')
 
 def run():
   """Entry point"""
@@ -18,24 +18,33 @@ def run():
   args = parser.parse_args()
 
   if args.task:
+    run_task('setup')
     for t in args.task:
-      tprint = colored(t, 'blue')
       if t in task.all:
-        print("Running task: -> [ {} ]".format(tprint))
         if t in dependsRegister:
           for d in dependsRegister[t][1]:
             if d in task.all:
-              print("Running task dependency: -> [ {} ]\n".format(colored(d, 'blue')))
+              print("Running task dependency ->  [ {} ] for [ {} ]\n".format(colored(d, 'blue'), t))
               task.all[d]()
-              print("."*5 + print_ok)
+              print("\n")
             else:
               print(print_warn + " Task [ {} ] not found, skipping".format(colored(d, 'blue')))
 
-        task.all[t]()
-        print("\n" + print_ok + " task \"{}\" successfully completed".format(t))
+        run_task(t)
 
       else:
-        print("{} Could not find task [ {} ] in the craftfile.".format(err, tprint))
+        print("{} Could not find task [ {} ] in the craftfile.".format(print_err, t))
+  else:
+    run_task('setup')
+    run_task('auto')
+
+
+def run_task(name):
+  tprint = colored(name, 'blue')
+  if name in task.all:
+    print("Running task: -> [ {} ]".format(tprint))
+    task.all[name]()
+    print("\n" + print_ok + " task \"{}\" successfully completed\n".format(name))
 
 def execfile():
   """Execute a crafty.py file using exec(). Requires no user imports"""
