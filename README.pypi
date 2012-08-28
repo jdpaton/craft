@@ -18,12 +18,16 @@ or the environment variable ``$CRAFTFILE``.
 
 An example ``crafty.py``::
 
-    from craft import task
+    from craft import task, depends
 
     @task
+    @depends('bar', 'foo')
     def cake():
-      """ Prints cake """
-      print('cake time')
+      """
+      Prints cake, and depends on foo & bar
+      to run first
+      """
+      print('Time for cake')
 
     @task
     def bar():
@@ -32,7 +36,22 @@ An example ``crafty.py``::
 
     @task
     def foo():
-      print("Hi, I'm foo")
+      print("Hi,I'm foo")
+
+    @task
+    def auto():
+      """
+      I will run when you supply no arguments to "craft".
+      """
+      print("Auto - Doing my own thing. Which is 'foo' today.")
+      foo()
+
+    @task
+    def setup():
+      """
+      I will run once on any call to "craft"
+      """
+      print("Hello good sir, I'm the setup routine.")
 
 Usage
 -----
@@ -50,15 +69,17 @@ show the list of available tasks. Example::
 
     Available tasks:
 
-    - cake: Prints cake 
-    - bar: Prints bar 
+    - cake: Prints cake, and depends on foo & bar to run first
+    - auto: I will run when you supply no arguments to "craft".
+    - setup: I will run once on any call to "craft"
     - foo: 
+    - bar: Prints bar 
 
 As you can see, the docstring for each ``@task`` function will then be represented
 in the help output, and docstrings can be omitted.
 
 
-You can call induvidual tasks like:
+You can call individual tasks like:
 
 ``craft foo``
 
@@ -66,7 +87,15 @@ and run multiple tasks with one call like:
 
 ``craft foo bar``
 
-Inter-task dependencies are coming soon.
+History
+-------
+
+v0.2.0 - 27 Aug 2012
+
+* Added setup() and auto() tasks
+* Added support for task dependencies via @depends
+
+v0.1.0 - 26 Aug 2012
 
 Source is available at: https://github.com/jdpaton/craft
 
