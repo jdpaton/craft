@@ -89,6 +89,13 @@ and run multiple tasks with one call like:
 
 History
 -------
+v0.2.4 - 10 Nov 2012
+
+* Fix an issue with setup.py linking to the README
+
+v0.2.3 - 14 Oct 2012
+
+* Fix error catching isolation from craft and the actual task
 
 v0.2.0 - 27 Aug 2012
 
